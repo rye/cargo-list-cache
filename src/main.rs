@@ -1,7 +1,6 @@
 use std::{
 	env::{self, VarError},
 	ffi::OsStr,
-	// str::pattern::CharArraySearcher,
 	path::PathBuf,
 };
 
@@ -38,12 +37,12 @@ fn main() {
 		glob
 	};
 
-	let cache_glob: String = cache_glob
-		.into_os_string()
-		.into_string()
+	let cache_glob: &str = cache_glob
+		.as_os_str()
+		.to_str()
 		.expect("failed to add glob components to weird cache directory");
 
-	for entry in glob::glob(&cache_glob).expect("weird glob?") {
+	for entry in glob::glob(cache_glob).expect("weird glob?") {
 		match entry {
 			Ok(path) => println!(
 				"{}",
