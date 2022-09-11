@@ -1,6 +1,8 @@
 [package]
 name = "cargo-downloaded"
+description = "Dumps the contents of your CARGO_HOME's cache."
 version = "0.1.0"
+authors = ["Kristofer Rye <kristofer.rye@gmail.com>"]
 edition = "2021"
 
 [dependencies]
