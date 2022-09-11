@@ -1,6 +1,6 @@
 [package]
-name = "cargo-downloaded"
-description = "Dumps the contents of your CARGO_HOME's cache."
+name = "cargo-list-cache"
+description = "Lists the files in your crate cache (${CARGO_HOME}/registry/cache/...)."
 version = "0.1.0"
 authors = ["Kristofer Rye <kristofer.rye@gmail.com>"]
 edition = "2021"
