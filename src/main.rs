@@ -1,3 +1,7 @@
+#![deny(clippy::all)]
+#![warn(clippy::pedantic)]
+#![forbid(unsafe_code)]
+
 use std::{
 	env::{self, VarError},
 	ffi::OsStr,
@@ -5,9 +9,9 @@ use std::{
 };
 
 fn main() {
-	// First, get the value of the CARGO_HOME environment variable.
-	// This is one of the few (two?) CARGO_ variables that is set both when running via `cargo run` as well as
-	// via `cargo` itself as a subcommand.
+	// First, get the value of the CARGO_HOME environment variable. This is one
+	// of the few (two?) CARGO_* variables that is set both when running via
+	// `cargo run` as well as via `cargo` itself as a subcommand.
 	let cargo_home: PathBuf = match env::var("CARGO_HOME") {
 		Ok(cargo_home) => cargo_home,
 		Err(VarError::NotPresent) => {
@@ -42,14 +46,13 @@ fn main() {
 		.to_str()
 		.expect("failed to add glob components to weird cache directory");
 
-	for entry in glob::glob(cache_glob).expect("weird glob?") {
+	for entry in glob::glob(cache_glob).expect("glob is weird") {
 		match entry {
 			Ok(path) => println!(
 				"{}",
 				path
 					.file_name()
-					.map(OsStr::to_str)
-					.flatten()
+					.and_then(OsStr::to_str)
 					.expect("failed to get file name for file")
 			),
 			Err(error) => eprintln!("{:?}", error),
