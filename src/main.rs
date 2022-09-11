@@ -25,13 +25,12 @@ fn main() {
 	}
 	.into();
 
+	// Make sure that CARGO_HOME itself is a directory.
 	if !cargo_home.as_path().is_dir() {
-		eprintln!(
-			"CARGO_HOME is not a directory: {:?}",
-			cargo_home.as_os_str()
-		);
+		eprintln!("CARGO_HOME is not a directory: {:?}", cargo_home);
 	}
 
+	// Tack on the glob components.
 	let cache_glob = {
 		let mut glob = cargo_home;
 		glob.push("registry");
@@ -41,21 +40,21 @@ fn main() {
 		glob
 	};
 
+	// Turn that back into a &str. Note that it should be _highly_ unlikely to get
+	// into a situation where this fails. (Hence, it's an expect.)
 	let cache_glob: &str = cache_glob
 		.as_os_str()
 		.to_str()
 		.expect("failed to add glob components to weird cache directory");
 
-	for entry in glob::glob(cache_glob).expect("glob is weird") {
-		match entry {
-			Ok(path) => println!(
-				"{}",
-				path
-					.file_name()
-					.and_then(OsStr::to_str)
-					.expect("failed to get file name for file")
-			),
-			Err(error) => eprintln!("{:?}", error),
+	// Loop over the glob results.
+	for entry in glob::glob(cache_glob).expect("glob failed") {
+		match &entry {
+			Ok(path) => match path.as_path().file_name().and_then(OsStr::to_str) {
+				Some(file_name) => println!("{}", file_name),
+				None => println!("{:?}", path),
+			},
+			Err(glob_error) => eprintln!("glob error: {:?}", glob_error),
 		}
 	}
 }
